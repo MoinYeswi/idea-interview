@@ -37,24 +37,25 @@ Claude: Who do you most want reading it?
 
 ## model-router
 
-For multi-step work, Claude gives each step a tier:
+Once the plan is agreed, Claude breaks it into tasks and gives each one to the model best suited to it, however small:
 
 | Model | Good for |
 |---|---|
-| Haiku | Mechanical work: finding files, renaming, formatting, summarizing logs |
+| Haiku | Small or mechanical work: finding files, renaming, formatting, summarizing logs |
 | Sonnet | Everyday work, and the default when unsure |
-| Opus | Hard judgment: architecture, unclear bugs, security review |
-| Fable | The hardest, longest tasks |
+| Opus | UI design and hard judgment: architecture, unclear bugs, security review |
+| Fable | Optional: the hardest, longest tasks, if you have access to it |
 
-It also decides whether a step is worth delegating. A subagent starts with no memory of the conversation, so tiny steps stay in the main chat. If a step fails, it retries once, one tier up, and then stops and tells you.
+Only a single quick action, such as one command or a one-line edit, stays in the main chat, because briefing a subagent would cost more than the action. If a step fails, it retries once, one tier up, and then stops and tells you.
 
 ```text
 Plan: add a settings page
 
 1. Find how existing pages are built: Haiku, delegated
-2. Decide where preferences are stored: Opus, main conversation
-3. Build the page: Sonnet, delegated
+2. Design the page layout: Opus, delegated
+3. Build the page: Sonnet, main conversation
 4. Write and run the tests: Sonnet, delegated
+5. Update old links to the new page: Haiku, delegated
 ```
 
 Savings depend on your work and haven't been measured here. In apps that can't run subagents, it tells you which model to select instead.
@@ -72,7 +73,7 @@ To make them fire more reliably, add these lines to `~/.claude/CLAUDE.md`. The s
 
 ```text
 At the start of any new project, build, or idea where the goal, scope, or approach isn't fully clear, use the idea-interview skill before doing any work.
-For multi-step work, use the model-router skill; following it counts as my permission to delegate routed steps to subagents.
+For any work beyond a single quick action, use the model-router skill; following it counts as my permission to delegate routed steps to subagents.
 ```
 
 ### Claude app

@@ -1,6 +1,6 @@
 ---
 name: model-router
-description: Use when running multi-step work, an approved plan, or several tasks of different difficulty, especially right after idea-interview. Assigns each step to the cheapest Claude model that can do it well, with Haiku for mechanical work, Sonnet for everyday work, Opus for hard judgment, and Fable for the hardest long-running tasks. Use it whenever the user wants to save tokens, cut cost, pick a model, or delegate work to subagents, even if they don't mention routing. Skip it for one small task that can simply be done in the current conversation.
+description: Use for any work beyond a single quick action, including small tasks, multi-step work, and approved plans, especially right after idea-interview. Assigns each task to the cheapest Claude model that can do it well, with Haiku for small or mechanical work, Sonnet for everyday work, Opus for UI design and hard judgment, and Fable, if the user has it, for the hardest long-running tasks. Use it whenever the user wants to save tokens, cut cost, pick a model, or delegate work to subagents, even if they don't mention routing. Skip it only for a single quick action, such as one command or a one-line edit.
 ---
 
 # Model Router
@@ -15,27 +15,29 @@ Give each step a tier:
 
 | Tier | Good for | Examples |
 |---|---|---|
-| Haiku | Mechanical work with an obvious right answer | Finding files, renaming, formatting, extracting data, summarizing logs |
+| Haiku | Small or mechanical work with an obvious right answer | Finding files, renaming, formatting, extracting data, summarizing logs, small text changes |
 | Sonnet | Everyday work, and the default when unsure | Writing features, fixing bugs with a clear cause, tests, refactors, drafting |
-| Opus | Hard judgment, where a wrong call is costly | Architecture, unclear bugs, security review, trade-offs across many files |
+| Opus | UI design and hard judgment, where a wrong call is costly | Designing screens or layouts, architecture, unclear bugs, security review, trade-offs across many files |
 | Fable | The hardest, longest tasks, when Opus has failed or clearly won't be enough | Large migrations, deep multi-stage investigations |
 
-Choose by how hard the thinking is, not by how large the task looks. Renaming something across 200 files is still a Haiku task.
+Fable is optional. Use it only if the user has said it's available to them. Otherwise Opus is the top tier.
+
+Choose by the kind of work, not by how large the task looks. Renaming something across 200 files is still a Haiku task, and a small UI change is still an Opus task. Small tasks get a tier too.
 
 If this page's model names are out of date, keep the same idea and use the current models at each level.
 
-## Step 2: Decide whether to delegate
+## Step 2: Route every task
 
-A subagent starts with no memory of the conversation, so it pays to read the files and context again. Delegating a tiny step can therefore cost more than doing it directly.
+Route every task, however small, so cheap work doesn't run on an expensive model. Keeping a task because it looks easy is the mistake this skill exists to prevent: a Sonnet session still hands small work down to Haiku, and hands UI design up to Opus.
 
-Delegate a step when at least one of these is true:
+- If its tier differs from the main model, delegate it to a subagent on that tier.
+- If its tier matches the main model, do it in the main conversation, unless it reads or produces a lot of text, such as wide searches, logs, or test output. Then delegate it so only a summary comes back.
 
-- It reads or produces a lot of text, such as wide searches, logs, or test output. Only a summary comes back, which keeps the main conversation small.
-- It's a sizable mechanical job that a cheaper model can finish alone.
+The one exception is a single quick action, such as one command or a one-line edit. Do that directly, because the brief and the result would cost more than the action.
 
-Keep a step in the main conversation when it takes only a few actions, depends on what was discussed, or needs the main model's judgment.
+A subagent starts with no memory of the conversation, so if a task depends on what was discussed, put what it needs in the brief.
 
-Run independent steps at the same time only when they don't touch the same files.
+Run independent tasks at the same time only when they don't touch the same files.
 
 ## Step 3: Write a tight brief
 
@@ -82,7 +84,8 @@ Plan: add a settings page.
 
 ```
 1. Find how existing pages are built: Haiku, delegated
-2. Decide where preferences are stored: Opus, main conversation
-3. Build the page: Sonnet, delegated
+2. Design the page layout: Opus, delegated
+3. Build the page: Sonnet, main conversation
 4. Write and run the tests: Sonnet, delegated
+5. Update old links to the new page: Haiku, delegated
 ```
