@@ -1,11 +1,6 @@
 # claude-skills
 
-Two Claude skills that work as a pair:
-
-- **idea-interview** stops Claude from building on guesses. It interviews you first and agrees a plan before any work begins.
-- **model-router** then gives each step of that plan to the cheapest Claude model that can do it well.
-
-Each skill also works on its own.
+Skills for Claude.
 
 ## idea-interview
 
@@ -35,52 +30,26 @@ Claude: Who do you most want reading it?
         Or something else.
 ```
 
-## model-router
-
-Once the plan is agreed, Claude breaks it into tasks and gives each one to the model best suited to it, however small:
-
-| Model | Good for |
-|---|---|
-| Haiku | Small or mechanical work: finding files, renaming, formatting, summarizing logs |
-| Sonnet | Everyday work, and the default when unsure |
-| Opus | UI design and hard judgment: architecture, unclear bugs, security review |
-| Fable | Optional: the hardest, longest tasks, if you have access to it |
-
-Only a single quick action, such as one command or a one-line edit, stays in the main chat, because briefing a subagent would cost more than the action. If a step fails, it retries once, one tier up, and then stops and tells you.
-
-```text
-Plan: add a settings page
-
-1. Find how existing pages are built: Haiku, delegated
-2. Design the page layout: Opus, delegated
-3. Build the page: Sonnet, main conversation
-4. Write and run the tests: Sonnet, delegated
-5. Update old links to the new page: Haiku, delegated
-```
-
-Savings depend on your work and haven't been measured here. In apps that can't run subagents, it tells you which model to select instead.
-
 ## Install
 
 ### Claude Code
 
 ```bash
 git clone https://github.com/MoinYeswi/claude-skills.git
-cp -r claude-skills/idea-interview claude-skills/model-router ~/.claude/skills/
+cp -r claude-skills/idea-interview ~/.claude/skills/
 ```
 
-To make them fire more reliably, add these lines to `~/.claude/CLAUDE.md`. The second one lets Claude start subagents without asking each time, so leave it out if you'd rather approve that yourself.
+To make it fire more reliably, add this line to `~/.claude/CLAUDE.md`:
 
 ```text
 At the start of any new project, build, or idea where the goal, scope, or approach isn't fully clear, use the idea-interview skill before doing any work.
-For any work beyond a single quick action, use the model-router skill; following it counts as my permission to delegate routed steps to subagents.
 ```
 
 ### Claude app
 
 1. Download this repo and unzip it.
-2. Zip the `idea-interview` folder, so that `SKILL.md` sits directly inside that folder. Do the same for `model-router` if you want it.
-3. Upload each zip under **Settings > Capabilities > Skills**.
+2. Zip the `idea-interview` folder, so that `SKILL.md` sits directly inside that folder.
+3. Upload the zip under **Settings > Capabilities > Skills**.
 
 ## Credits
 
