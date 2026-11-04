@@ -1,4 +1,4 @@
-# idea-interview
+# claude-skills
 
 Two Claude skills that work as a pair:
 
@@ -64,8 +64,8 @@ Savings depend on your work and haven't been measured here. In apps that can't r
 ### Claude Code
 
 ```bash
-git clone https://github.com/MoinYeswi/idea-interview.git
-cp -r idea-interview/idea-interview idea-interview/model-router ~/.claude/skills/
+git clone https://github.com/MoinYeswi/claude-skills.git
+cp -r claude-skills/idea-interview claude-skills/model-router ~/.claude/skills/
 ```
 
 To make them fire more reliably, add these lines to `~/.claude/CLAUDE.md`. The second one lets Claude start subagents without asking each time, so leave it out if you'd rather approve that yourself.
@@ -78,7 +78,7 @@ For multi-step work, use the model-router skill; following it counts as my permi
 ### Claude app
 
 1. Download this repo and unzip it.
-2. Zip the inner `idea-interview` folder, so that `SKILL.md` sits directly inside that folder. Do the same for `model-router` if you want it.
+2. Zip the `idea-interview` folder, so that `SKILL.md` sits directly inside that folder. Do the same for `model-router` if you want it.
 3. Upload each zip under **Settings > Capabilities > Skills**.
 
 ## Credits
